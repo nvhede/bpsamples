@@ -1,0 +1,145 @@
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_BringProLayout.cshtml";
+}
+<!--html goes here-->
+<link href="~/Assets/Themes/Material-Admin/vendors/bower_components/bootstrap-sweetalert/lib/sweet-alert.css" rel="stylesheet" />
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header">
+            <h2>Contact Requests <small>Date Added first</small></h2>
+            <div class="pull-right"><button type="button" class="btn btn-danger" id="spamLinkButton">Spam</button></div>
+        </div>
+        <div id="data-table-basic-header" class="bootgrid-header container-fluid">
+            <div class="row">
+                <div class="col-xs-6 actionBar">
+                    <div class="search form-group">
+                        <div class="input-group">
+                            <span class="zmdi icon input-group-addon glyphicon-search"></span>
+                            <input type="search" class="search-field form-control" id="mySearchInput" placeholder="Search">
+                            <span id="filterCount"></span>
+                        </div>
+                    </div>
+                    <div class="actions btn-group">
+                        <div class="dropdown btn-group">
+                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false"><span class="dropdown-text">10</span> <span class="caret"></span></button>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li class="active" aria-selected="true"><a data-action="10" class="dropdown-item dropdown-item-button">10</a></li>
+                                <li aria-selected="false"><a data-action="25" class="dropdown-item dropdown-item-button">25</a></li>
+                                <li aria-selected="false"><a data-action="50" class="dropdown-item dropdown-item-button">50</a></li>
+                                <li aria-selected="false"><a data-action="-1" class="dropdown-item dropdown-item-button">All</a></li>
+                            </ul>
+                        </div>
+                        <div class="dropdown btn-group">
+                            <button class="btn btn-default dropdown-toggle" type="button" data-toggle="dropdown"><span class="dropdown-text"><span class="zmdi icon zmdi-view-module"></span></span> <span class="caret"></span></button>
+                            <ul class="dropdown-menu pull-right" role="menu">
+                                <li>
+                                    <div class="checkbox">
+                                        <label class="dropdown-item">
+                                            <input name="id" type="checkbox" value="1" class="dropdown-item-checkbox" checked="checked"> ID<i class="input-helper"></i>
+                                        </label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="checkbox">
+                                        <label class="dropdown-item"><input name="sender" type="checkbox" value="1" class="dropdown-item-checkbox" checked="checked"> Sender<i class="input-helper"></i></label>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="checkbox">
+                                        <label class="dropdown-item"><input name="received" type="checkbox" value="1" class="dropdown-item-checkbox" checked="checked"> Received<i class="input-helper"></i></label>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12 table-responsive">
+            <input type='hidden' id='current_page' />
+            <input type='hidden' id='show_per_page' />
+            <table class="table table-striped bootgrid-table table-vmiddle" id="crTable">
+                <thead>
+                    <tr>
+                        <th>#ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Subject</th>
+                        @*<th>User ID</th>
+                        <th>Status</th>*@
+                        <th>Date Recieved</th>
+                        <th>Info</th>
+                        <th>Delete</th>
+                        <th>Emailed?</th>
+                        <th>Spam</th>
+                    </tr>
+                </thead>
+                <tbody class="tableTop"></tbody>
+            </table>
+        </div>
+        <div id="data-table-basic-footer" class="bootgrid-footer container-fluid">
+            <div class="row">
+                <div class="col-sm-6">
+                    <ul class="pagination">
+                        <li class="first disabled" aria-disabled="true"><a data-page="first" class="button"><i class="zmdi zmdi-more-horiz"></i></a></li>
+                        <li class="prev disabled" aria-disabled="true"><a data-page="prev" class="button"><i class="zmdi zmdi-chevron-left"></i></a></li>
+                        <li class="page-1 active" aria-disabled="false" aria-selected="true"><a data-page="1" class="button">1</a></li>
+                        <li class="page-2" aria-disabled="false" aria-selected="false"><a data-page="2" class="button">2</a></li>
+                        <li class="next" aria-disabled="false"><a data-page="next" class="button"><i class="zmdi zmdi-chevron-right"></i></a></li>
+                        <li class="last" aria-disabled="false"><a data-page="last" class="button"><i class="zmdi zmdi-more-horiz"></i></a></li>
+                    </ul>
+                </div>
+                <div class="col-sm-6 infoBar">
+                    <div class="infos">Showing 1 to 10 of 20 entries</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--modal here-->
+<div class="modal fade" id="crModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="name">Contact Information</h2>
+            </div>
+            <div class="modal-body">
+                <div class="pmo-contact">
+                    <ul>
+                        <li class="ng-binding"><i class="zmdi zmdi-account zmdi-hc-fw"></i> <span id="userID">User ID here</span></li>
+                        <li class="ng-binding"><i class="zmdi zmdi-email"></i><span id="email">Email here</span></li>
+                        <li class="ng-binding"><i class="zmdi zmdi-view-list-alt zmdi-hc-fw"></i><span id="subject">Subject Here</span></li>
+                        <li>
+                            <i class="zmdi zmdi-comment-text zmdi-hc-fw"></i>
+                            <address class="m-b-0 ng-binding"><span id="message">Message Here</span></address>
+                        </li>
+                        <li class="ng-binding"><i class="zmdi zmdi-email"></i><span id="status">Status here</span></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal" aria-label="Close">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--Contact Request entry template-->
+<script id="contactrequest-template" type="text/template">
+    <tr class="crtable">
+        <td class="id">1</td>
+        <td class="name">Name</td>
+        <td class="email">Email</td>
+        <td class="subject">Subject</td>
+        @*<td class="userID">UserID</td>
+        <td class="status">Status</td>*@
+        <td class="dateAdded">Date Added</td>
+        <td><a class="CRInfo"><i class="zmdi zmdi-info zmdi-hc-2x animated"></i></a></td>
+        <td><i class="zmdi zmdi-delete zmdi-hc-2x CRDelete"></i></td>
+        <td><a class="CREmail"><i class="zmdi zmdi-email zmdi-hc-2x sentEmail"></i></a></td>
+        <td><a class="CRSpam"><i class="zmdi zmdi-tag-close zmdi-hc-2x"></i></a></td>
+    </tr>
+</script>
+<!--html ends here-->
