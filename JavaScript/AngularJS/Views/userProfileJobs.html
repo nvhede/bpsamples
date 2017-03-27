@@ -1,0 +1,161 @@
+<!--MAIN: for rendering accordions.-->
+<!--tabs here.-->
+<div class="row">
+    <div class="col-md-12">
+        <div ng-include src="'/Assets/Themes/bringpro/js/features/dashboard/templates/userProfileJobsPartial.html'"></div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <!--end tabs-->
+        <div class="card-header">
+            <div class="panel-group" id="jobAccordion" role="tablist" aria-multiselectable="true">
+                <uib-accordion close-others="profilejobs.status.isFirstOpen" is-disabled="profilejobs.status.isFirstDisabled">
+                    <div uib-accordion-group class="accordion" is-open="jobs.open[$index]" ng-repeat="jobs in profilejobs.jobs track by jobs.id" ng-click="profilejobs.retrieveJobInfo(jobs.id)">
+                        <uib-accordion-heading class="accordion-heading">
+                            <div class="row">
+                                <div class="col-md-2 col-xs-2">
+                                    <div class="zmdi zmdi-circle pull-left" ng-class="{'typeClassTrue': jobs.typeName == 'Scheduled', 'typeClassFalse': jobs.typeName == 'ASAP'}"></div>
+                                    <p>#: {{jobs.id}}</p>
+                                </div>
+                                <div class="col-md-8 col-xs-8">
+                                    <p class="text-center">${{jobs.price}}</p>
+                                </div>
+                                <div class="col-md-1 col-xs-1">
+                                    <p ng-class="{'typeClassTrue': jobs.typeName == 'Scheduled', 'typeClassFalse': jobs.typeName == 'ASAP'}"><strong>{{jobs.typeName}}</strong></p>
+                                </div>
+                                <div class="col-md-1 col-xs-1">
+                                    <i class="pull-right zmdi zmdi-chevron-right zmdi-hc-2x" ng-class="{'zmdi zmdi-chevron-down zmdi-hc-2x': jobs.open[$index], 'zmdi zmdi-chevron-right zmdi-hc-2x': !jobs.open[$index]}"></i>
+                                </div>
+                            </div>
+                        </uib-accordion-heading>
+                        <!--Contact information-->
+                        <div class="row panel-body">
+                            <div class="col-md-6 col-xs-12">
+                                <div class="order-information">
+                                    <div class="row" style="border-bottom: 1px solid #ccc;">
+                                        <div class="card-header">
+                                            <h4 class="text-center">USER</h4>
+                                        </div>
+                                        <div class="card-body">
+                                            <center>
+                                                <p>
+                                                    <strong>Ordered by: </strong>{{profilejobs.jobinfo.user.firstName}} {{profilejobs.jobinfo.user.lastName}}
+                                                </p>
+                                                <p>
+                                                    <strong>Phone Number: </strong> {{profilejobs.jobinfo.user.phone | phoneNumber}}
+                                                </p>
+                                                <p>
+                                                    <strong>Address: </strong>
+                                                </p>
+                                                <p>
+                                                    <strong>Email: </strong> {{profilejobs.jobinfo.user.email}}
+                                                </p>
+                                            </center>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 col-xs-12">
+                                            <div class="card-header">
+                                                <h4 class="text-center">COMPANY</h4>
+                                            </div>
+                                            <div class="card-body">
+                                                <center>
+                                                    <p>
+                                                        <strong>Ordered from: </strong>{{profilejobs.jobinfo.website.name}}
+                                                    </p>
+                                                    <p>
+                                                        <strong>Url: </strong>{{profilejobs.jobinfo.website.url}}
+                                                    </p>
+                                                    <p>
+                                                        <strong>Phone Number: </strong> {{profilejobs.jobinfo.website.phone | phoneNumber}}
+                                                    </p>
+                                                    <p>
+                                                        <strong>Address: </strong> SOON
+                                                    </p>
+                                                </center>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-xs-6">
+                                <div class="row">
+                                    <!-- Map information here-->
+                                    <img class="google-maps img-responsive" ng-src="{{profilejobs.map}}" />
+                                </div>
+                                <div class="order-information">
+                                    <div class="row">
+                                        <!--Item information here-->
+                                        <div class="card-header">
+                                            <center><h4>ITEMS</h4></center>
+                                        </div>
+                                        <div class="card-body">
+                                            <div ng-class="profilejobs.colsize" ng-repeat="item in profilejobs.colinfo track by $index">
+                                                <ul ng-repeat="items in item.items track by $index">
+                                                    <li>{{items}}</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-offset-4 col-xs-offset-4">
+                                        <button class="btn btn-sm btn-default m-r-10 pull-right" ng-click="$event.stopPropagation(); profilejobs.goToInvoice()">Job Details</button>
+                                        <button type="button" class="btn btn-sm btn-danger pull-right">Print Invoice</button>
+                                        <button type="button" class="btn btn-sm btn-primary m-r-10 pull-right" ng-if="profilejobs.jobinfo.jobStatus == 9" ng-click="$event.stopPropagation(); profilejobs.goToDraft()">Finish Draft</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </uib-accordion>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .accordion {
+        border-bottom: 2px solid #C2D6D6;
+        background-color: transparent;
+        color: #6E6E6E;
+    }
+
+        .accordion:hover {
+            background-color: #F8F8F8;
+        }
+
+    .typeClassTrue {
+        color: #29a329;
+    }
+
+    .typeClassFalse {
+        color: #C1071E;
+    }
+
+    .panel-body {
+        background-color: #C2D6D6 !important;
+        border-radius: 10px;
+    }
+
+    .google-maps {
+        border-radius: 10px;
+        background-color: #F8F8F8;
+        border: 2px solid #F8F8F8;
+        padding: 10px;
+    }
+
+    .order-information {
+        border-radius: 10px;
+        background-color: #F8F8F8;
+        border: 2px solid #F8F8F8;
+        padding: 10px;
+    }
+
+    .bgm-bringpro {
+        background-color: #C2D6D6 !important;
+    }
+</style>

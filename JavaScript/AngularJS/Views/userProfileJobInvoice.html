@@ -1,0 +1,241 @@
+<div class="container">
+    <!--HEADER-->
+    <div class="row">
+        <div class="col-md-12 header-invoice-borderline">
+            <div class="text-center">
+                <h2 class="text-muted">Invoice for Job #{{jobinvoice.jobinfo.id}}</h2>
+            </div>
+            <p>&nbsp;</p>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <!--SUMMARY-->
+    <div class="row">
+        <div class="col-md-6 col-md-offset-3 panel-body">
+            <div class="row">
+                <div class="col-md-12 order-information-invoice">
+                    <div class="panel-heading pull-left">
+                        <h4>Payment Information</h4>
+                        <p>
+                            <strong>Card Name: </strong>{{jobinvoice.jobinfo.user.firstName}} {{jobinvoice.jobinfo.user.lastName}}
+                        </p>
+                        <p>
+                            <strong>Card Number: </strong> **** {{jobinvoice.jobinfo.user.creditCards.last4DigitsCC}}
+                        </p>
+                        <p>
+                            <strong>Exp Date: </strong>09/2020
+                        </p>
+                    </div>
+                    <div class="panel-heading pull-right">
+                        <h4>Order Preferences</h4>
+                        <p ng-if="jobinvoice.jobinfo.jobType = 1">
+                            <strong>Job Type: </strong>ASAP
+                        </p>
+                        <p ng-if="jobinvoice.jobinfo.jobType = 2">
+                            <strong>Job Type: </strong>Scheduled
+                        </p>
+                        <p>
+                            <strong>Number of Items: </strong>{{jobinvoice.jobinfo.jobWayponits.jobWaypointItemsPickup.length}}
+                        </p>
+                        <p>
+                            <strong>Number of Waypoints: </strong>{{jobinvoice.jobinfo.jobWaypoints.length}}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container header-invoice-borderline">
+    <!--INVOICE-->
+    <div class="row waypoint-invoice-borderline" ng-repeat="waypoint in jobinvoice.jobinfo.jobWaypoints track by $index">
+        <div class="row">
+            <!--Waypoint information + map -->
+            <div class="col-md-8 card-header">
+                <h4 class="text-muted">
+                    <strong>
+                        <span class="text-uppercase">{{waypoint.address.line1}}, {{waypoint.address.city}}, {{waypoint.address.state}}, {{waypoint.address.zipCode}}, </span>
+                        <span class="text-uppercase" ng-if="waypoint.suiteNo.indexOf('Suite') == -1 && waypoint.suiteNo.indexOf('suite') == -1">Suite {{waypoint.suiteNo}}</span>
+                        <span class="text-uppercase" ng-if="waypoint.suiteNo.includes('Suite')|| waypoint.suiteNo.includes('suite')">{{waypoint.suiteNo}}</span>
+                    </strong>
+                </h4>
+                <p>{{waypoint.contactName}}, {{waypoint.phone | phoneNumber}}</p>
+                <i ng-hide="!waypoint.specialInstructions">{{waypoint.specialInstructions}}</i>
+                <br />
+            </div>
+            <div class="col-md-4 card-header">
+                <img class="img-responsive google-maps-invoice" ng-src="{{waypoint.googleurl}}" />
+            </div>
+        </div>
+        <div class="row">
+            <!--Table headers-->
+            <div class="card-header text-uppercase item-invoice-borderline">
+                <div class="col-md-3 col-xs-3 col-md-offset-1 c-gray">
+                    <p>ITEM</p>
+                </div>
+                <div class="col-md-2 col-xs-2 c-gray">
+                    <p class="text-right">INFO</p>
+                </div>
+                <div class="col-md-3 col-xs-3 c-gray">
+                    <p class="text-right">QUANTITY</p>
+                </div>
+                <div class="col-md-3 col-xs-3 c-gray">
+                    <p class="text-center">TIME</p>
+                </div>
+            </div>
+        </div>
+        <div ng-if="!$first && waypoint.jobWaypointItemsDropOff.length != 0">
+            <!--Dropoff (only applicable to waypoints after the first)-->
+            <div class="row">
+                <div class="col-md-12">
+                    <h5 class="text-muted text-left"><strong>DROPOFF</strong></h5>
+                </div>
+            </div>
+            <div class="row" ng-repeat="item in waypoint.jobWaypointItemsDropOff track by item.id">
+                <!--Dropoff Items-->
+                <div class="col-md-1">
+                    <img ng-src="{{item.jobItem.media.fullUrl}}" class="img-thumbnail" />
+                </div>
+                <div class="col-md-3">
+                    <h7 class="text-uppercase f-400" ng-if="!item.itemNote">{{item.jobItem.name}}</h7>
+                    <h7 class="text-uppercase f-400" ng-if="item.itemNote">Other></h7>
+                </div>
+                <div class="col-md-3">
+                    <center><h5 ng-if="item.itemNote">{{item.itemNote}}</h5></center>
+                    <center><h5 ng-if="!item.itemNote">N/A</h5></center>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center">
+                        <h5><i>{{item.quantity}}</i></h5>
+                    </div>
+                </div>
+                <div class="col-md-3 bgm-bringpro ">
+                    <div class="text-center">
+                        <h5><i>{{item.jobItem.minTime}} - {{item.jobItem.maxTime}} minutes</i></h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div ng-if="waypoint.jobWaypointItemsPickup.length != 0">
+            <div class="row">
+                <!--Pickup (applicable to all waypoints except the last)-->
+                <div class="col-md-12">
+                    <h5 class="text-muted text-left"><strong>PICKUP</strong></h5>
+                </div>
+            </div>
+            <div class="row" ng-repeat="item in waypoint.jobWaypointItemsPickup track by item.id">
+                <!--Pickup items-->
+                <div class="col-md-1">
+                    <img ng-src="{{item.jobItem.media.fullUrl}}" class="img-thumbnail" />
+                </div>
+                <div class="col-md-3">
+                    <h7 class="text-uppercase f-400" ng-if="!item.itemNote">{{item.jobItem.name}}</h7>
+                    <h7 class="text-uppercase f-400" ng-if="item.itemNote">Other</h7>
+                </div>
+                <div class="col-md-3">
+                    <center><h5 ng-if="item.itemNote">{{item.itemNote}}</h5></center>
+                    <center><h5 ng-if="!item.itemNote">N/A</h5></center>
+                </div>
+                <div class="col-md-2">
+                    <div class="text-center">
+                        <h5><i>{{item.quantity}}</i></h5>
+                    </div>
+                </div>
+                <div class="col-md-3 bgm-bringpro">
+                    <div class="text-center">
+                        <h5><i>{{item.jobItem.minTime}} - {{item.jobItem.maxTime}} minutes</i></h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!-- signature plus total amount of time/money.-->
+        <div class="col-md-10">&nbsp;</div>
+        <div class="col-md-2 bgm-red">
+            <h5 class="text-center c-white"><i>{{jobinvoice.jobinfo.minSum}} - {{jobinvoice.jobinfo.maxSum}} minutes</i></h5> <!--Total time-->
+        </div>
+    </div>
+</div>
+<div class="container">
+    <!--ACITVITY/DRIVER INFO-->
+    <div class="row panel-body">
+        <div class="col-md-6">
+            <!--Driver and Contact Information here-->
+        </div>
+        <div class="col-md-6 order-information-invoice">
+            <!--Activity Log-->
+            <div class="row" ng-repeat="activity in jobinvoice.activityLog track by $index">
+                <div class="col-md-12 pull-left">
+                    <p class="activity-date text-muted">{{activity.activityTypeInfo.date | utcToLocal : "medium"}}</p>
+                </div>
+                <div class="row feed-item">
+                    <div class="col-md-1">
+                        <span class="zmdi zmdi-hc-2x zmdi-{{activity.activityTypeInfo.icon}}"></span>
+                    </div>
+                    <div class="col-md-11 card-body">
+                        <h5 class="text-left">{{activity.activityTypeInfo.message}}</h5>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .bgm-bringpro {
+        background-color: #C2D6D6 !important;
+    }
+
+    .waypoint-invoice-borderline {
+        border-bottom: 3px solid #ccc;
+    }
+
+    .item-invoice-borderline {
+        border-bottom: 1px solid #ccc;
+    }
+
+    .header-invoice-borderline {
+        border-bottom: 5px solid #ccc;
+    }
+
+
+    .feed-item {
+        border-left: 2px solid #ddd;
+        position: relative;
+        z-index: 1;
+    }
+
+    .panel-body {
+        background-color: #C2D6D6 !important;
+        border-radius: 10px;
+    }
+
+    .google-maps-invoice {
+        border-radius: 15px;
+        background-color: #F8F8F8;
+        border: 2px solid #F8F8F8;
+    }
+
+    .order-information-invoice {
+        border-radius: 10px;
+        background-color: #F8F8F8;
+        border: 2px solid #F8F8F8;
+    }
+
+    .activity-date {
+        font-size: 75%;
+    }
+
+    .zmdi-star {
+        color: #2cb5e8 !important;
+    }
+
+    .zmdi-check-circle {
+        color: #47cf73 !important;
+    }
+
+    .zmdi-minus-circle {
+        color: #ff3c41 !important;
+    }
+</style>

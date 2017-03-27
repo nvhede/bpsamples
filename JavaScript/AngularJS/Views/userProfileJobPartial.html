@@ -1,0 +1,29 @@
+<!--PARTIAL: for rendering tabs.-->
+<div ng-controller="userProfileJobsPartialController as partial">
+    <div class="container">
+        <div class="col-xs-12">
+            <div class="row">
+                <br/>
+            </div>
+            <div class="row">
+                <div class="dropdown hidden-sm hidden-md hidden-lg">
+                    <button type="button" class="btn btn-default btn-block waves-effect" data-toggle="dropdown" aria-expanded="false"><i class="zmdi zmdi-view-headline zmdi-hc-fw"></i>Jobs</button>
+
+                    <ul class="dm-icon dropdown-menu">
+                        <li  ng-repeat="tab in partial.jobtabs" ng-class="partial.activeClass(tab)">
+                            <a ng-href="/bringpro/dashboard/#/jobs/{{tab.label}}"><span class="zmdi zmdi-{{tab.icon}}"></span> {{tab.label}}</a>
+                        </li>
+                    </ul>
+                </div>
+                <!--TABS HERE-->
+                <div role="tabpanel" class="clearfix hidden-xs">
+                    <ul class="tab-nav tn-justified">
+                        <li class="waves-effect" ng-repeat="tab in partial.jobtabs" ng-class="partial.activeClass(tab)">
+                            <a ng-href="/bringpro/dashboard/#/jobs/{{tab.label}}"><span class="zmdi zmdi-{{tab.icon}}"></span> {{tab.label}}</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
